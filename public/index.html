@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <style>
+      #searched{
+        display: none;
+      }
+    </style>
+  </head>
+<body>
+    <h1>This is to mint trial nfts</h1>
+    <form>
+        <label for="numb">How many do you want:</label>
+        <select id="numb" name="numb">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+      </form>
+
+
+
+      <!-- Button trigger modal -->
+<button type="button" id="btn" onclick="mint()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >
+    MINT
+  </button>
+  <br>
+  <input type="number" name="" id="inid">
+  <button id="search" onclick="search()">Search</button>
+  <br>
+  <div id="searched">
+    <img src="" id="simg" width="480px" alt=""> <br>
+    <p><b>background : </b><span id="backg"></span></p> 
+    <p><b>color : </b><span id="clr"></span></p>
+  </div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="title_nft">NFT RESERVED</h5> <!-- title -->
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="para_nft"></p>
+          <p style="size: 8;" id="domadd"></p>
+          <p>Once the payment is complete you will find your NFT in your wallet</p>
+          <p style="color: red;">Warning : Do not pay from an exchange! or you will lose your ada</p>
+        </div>
+        <div class="modal-footer">
+        <p style="size: 12;" id='copied'></p>
+          <button type="button" id="copy" class="btn btn-secondary" onclick="ani">copy address</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Understood</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+      <script>
+          
+        async function mint()
+        {
+            
+            const numb = document.getElementById("numb").value;
+            console.log(numb);
+            document.getElementById('btn').style.display = 'none'
+            const api_url = 'mint/'+numb;
+            const response = await fetch(api_url);
+            const  add = await response.json();
+            console.log(add)
+            document.getElementById('domadd').textContent = add.paymentAddress;
+            document.getElementById('para_nft').textContent = "You have 20 minutes to pay "+add.adaToSend+" ada to the address : "
+            navigator.clipboard.writeText(add.paymentAddress); 
+            
+        }  
+
+        async function search(){
+          const inid = document.getElementById("inid").value;
+          const api_l = 'search/'+inid;
+          const response2 = await fetch(api_l);
+          const data = await response2.json();
+          console.log(data);
+          document.getElementById('searched').style.display = 'block';
+          document.getElementById('simg').src = data[0].image;
+          document.getElementById('backg').textContent = data[0].background;
+          document.getElementById('clr').textContent = data[0].color;
+          
+
+        }
+
+          
+      </script>
+</body>
+</html>
